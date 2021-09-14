@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 from .util import read_image
-
+from utils.config import cfg
 
 class VOCBboxDataset:
     """Bounding box dataset for PASCAL `VOC`_.
@@ -80,7 +80,7 @@ class VOCBboxDataset:
         self.data_dir = data_dir
         self.use_difficult = use_difficult
         self.return_difficult = return_difficult
-        self.label_names = VOC_BBOX_LABEL_NAMES
+        self.label_names = cfg.VOC_BBOX_LABEL_NAMES
 
     def __len__(self):
         return len(self.ids)
@@ -107,19 +107,24 @@ class VOCBboxDataset:
         for obj in anno.findall('object'):
             # when in not using difficult split, and the object is
             # difficult, skipt it.
-            if not self.use_difficult and int(obj.find('difficult').text) == 1:
-                continue
+            if obj.find('difficult'):
+                if not self.use_difficult and int(obj.find('difficult').text) == 1:
+                    continue
 
-            difficult.append(int(obj.find('difficult').text))
+            difficult.append(int(obj.find('difficult').text) if obj.find('difficult') else 0)
             bndbox_anno = obj.find('bndbox')
             # subtract 1 to make pixel indexes 0-based
             bbox.append([
                 int(bndbox_anno.find(tag).text) - 1
                 for tag in ('ymin', 'xmin', 'ymax', 'xmax')])
-            name = obj.find('name').text.lower().strip()
-            label.append(VOC_BBOX_LABEL_NAMES.index(name))
+            name = obj.find('name').text.strip()#obj.find('name').text.lower().strip()
+            label.append(cfg.VOC_BBOX_LABEL_NAMES.index(name))
+        #try:
         bbox = np.stack(bbox).astype(np.float32)
         label = np.stack(label).astype(np.int32)
+        # except:
+        #     print(id_)
+
         # When `use_difficult==False`, all elements in `difficult` are False.
         difficult = np.array(difficult, dtype=np.bool).astype(np.uint8)  # PyTorch don't support np.bool
 
@@ -132,26 +137,3 @@ class VOCBboxDataset:
         return img, bbox, label, difficult
 
     __getitem__ = get_example
-
-
-VOC_BBOX_LABEL_NAMES = (
-    'aeroplane',
-    'bicycle',
-    'bird',
-    'boat',
-    'bottle',
-    'bus',
-    'car',
-    'cat',
-    'chair',
-    'cow',
-    'diningtable',
-    'dog',
-    'horse',
-    'motorbike',
-    'person',
-    'pottedplant',
-    'sheep',
-    'sofa',
-    'train',
-    'tvmonitor')

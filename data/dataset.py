@@ -6,11 +6,11 @@ from skimage import transform as sktsf
 from torchvision import transforms as tvtsf
 from data import util
 import numpy as np
-from utils.config import opt
+from utils.config import cfg#opt
 
 
 def inverse_normalize(img):
-    if opt.caffe_pretrain:
+    if cfg.caffe_pretrain:
         img = img + (np.array([122.7717, 115.9465, 102.9801]).reshape(3, 1, 1))
         return img[::-1, :, :]
     # approximate un-normalize for visualize
@@ -67,7 +67,7 @@ def preprocess(img, min_size=600, max_size=1000):
     img = sktsf.resize(img, (C, H * scale, W * scale), mode='reflect',anti_aliasing=False)
     # both the longer and shorter should be less than
     # max_size and min_size
-    if opt.caffe_pretrain:
+    if cfg.caffe_pretrain:
         normalize = caffe_normalize
     else:
         normalize = pytorch_normalze
@@ -98,10 +98,10 @@ class Transform(object):
 
 
 class Dataset:
-    def __init__(self, opt):
-        self.opt = opt
-        self.db = VOCBboxDataset(opt.voc_data_dir)
-        self.tsf = Transform(opt.min_size, opt.max_size)
+    def __init__(self, cfg):
+        self.opt = cfg
+        self.db = VOCBboxDataset(cfg.voc_data_dir,cfg.split)
+        self.tsf = Transform(cfg.min_size, cfg.max_size)
 
     def __getitem__(self, idx):
         ori_img, bbox, label, difficult = self.db.get_example(idx)
@@ -116,9 +116,9 @@ class Dataset:
 
 
 class TestDataset:
-    def __init__(self, opt, split='test', use_difficult=True):
-        self.opt = opt
-        self.db = VOCBboxDataset(opt.voc_data_dir, split=split, use_difficult=use_difficult)
+    def __init__(self, cfg, split='test', use_difficult=True):
+        self.opt = cfg
+        self.db = VOCBboxDataset(cfg.voc_data_dir, split=split, use_difficult=use_difficult)
 
     def __getitem__(self, idx):
         ori_img, bbox, label, difficult = self.db.get_example(idx)

@@ -5,7 +5,7 @@ import ipdb
 import matplotlib
 from tqdm import tqdm
 
-from utils.config import opt
+from utils.config import opt,cfg
 from data.dataset import Dataset, TestDataset, inverse_normalize
 from model import FasterRCNNVGG16
 from torch.utils import data as data_
@@ -16,10 +16,10 @@ from utils.eval_tool import eval_detection_voc
 
 # fix for ulimit
 # https://github.com/pytorch/pytorch/issues/973#issuecomment-346405667
-import resource
+#import resource
 
-rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
-resource.setrlimit(resource.RLIMIT_NOFILE, (20480, rlimit[1]))
+#rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
+#resource.setrlimit(resource.RLIMIT_NOFILE, (20480, rlimit[1]))
 
 matplotlib.use('agg')
 
@@ -46,8 +46,8 @@ def eval(dataloader, faster_rcnn, test_num=10000):
 
 
 def train(**kwargs):
-    opt._parse(kwargs)
-
+    #opt._parse(kwargs)
+    opt=cfg
     dataset = Dataset(opt)
     print('load data')
     dataloader = data_.DataLoader(dataset, \
@@ -123,8 +123,48 @@ def train(**kwargs):
         if epoch == 13: 
             break
 
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="PyTorch Object Detection Training")
+    parser.add_argument(
+        "--config-file",
+        default="",
+        # "../configs/da_ship/da_faster_rcnn_R_50_C4_SeaShips_SMD03.yaml",#
+        metavar="FILE",
+        help="path to config file",
+        type=str,
+    )
+    parser.add_argument("--local_rank", type=int, default=0)
+    parser.add_argument(
+        "--skip-test",
+        dest="skip_test",
+        help="Do not test the final model",
+        action="store_true",
+        default=False
+    )
+    parser.add_argument(
+        "--opts",
+        help="Modify config options using the command-line",
+        default=['OUTPUT_DIR', 'logFRCNN0'
+                 ],
+        nargs=argparse.REMAINDER, type=str,
+    )
+
+    args = parser.parse_args()
+    if args.config_file:
+        cfg.merge_from_file(args.config_file)
+    cfg.merge_from_list(args.opts)
+    #cfg.freeze()
+    train()
+
+
 
 if __name__ == '__main__':
-    import fire
+    #import fire
+    d={}
+    #fire.Fire()
+    train(env='fasterrcnn',plot_every=100)#*{})#
+    #main()
 
-    fire.Fire()
+
+
