@@ -1,4 +1,5 @@
 source url:https://github.com/chenyuntc/simple-faster-rcnn-pytorch
+
 # A Simple and Fast Implementation of Faster R-CNN
 
 ## 1. Introduction
@@ -186,7 +187,7 @@ This work builds on many excellent works, which include:
 - [Ruotian Luo's pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn) which based on [Xinlei Chen's tf-faster-rcnn](https://github.com/endernewton/tf-faster-rcnn)
 - [faster-rcnn.pytorch by Jianwei Yang and Jiasen Lu](https://github.com/jwyang/faster-rcnn.pytorch).It mainly refer to [longcw's faster_rcnn_pytorch](https://github.com/longcw/faster_rcnn_pytorch)
 - All the above Repositories have referred to [py-faster-rcnn by Ross Girshick and Sean Bell](https://github.com/rbgirshick/py-faster-rcnn)  either directly or indirectly. 
-- We fix the code according to our requirements[A Simple and Fast Implementation of Faster R-CNN by chenyuntc](https://github.com/chenyuntc/simple-faster-rcnn-pytorch) 
+- We fix the code according to our requirements from [chenyuntc/simple-faster-rcnn-pytorch: A simplified implemention of Faster R-CNN that replicate performance from origin paper (github.com)](https://github.com/chenyuntc/simple-faster-rcnn-pytorch)
 
 ## ^_^
 Licensed under MIT, see the LICENSE for more detail.
