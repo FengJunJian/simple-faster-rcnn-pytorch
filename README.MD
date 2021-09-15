@@ -58,16 +58,16 @@ Here is an example of create environ **from scratch** with `anaconda`
 
 ```sh
 # create conda env
-conda create --name simp python=3.7
-conda activate simp
+conda create --name Torch python=3.6
+conda activate Torch
 # install pytorch
-conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
+conda install pytorch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 cudatoolkit=10.1 -c pytorch
 
 # install other dependancy
 pip install visdom scikit-image tqdm fire ipdb pprint matplotlib torchnet
 
 # start visdom
-nohup python -m visdom.server &
+python -m visdom.server
 
 ```
 
@@ -186,6 +186,7 @@ This work builds on many excellent works, which include:
 - [Ruotian Luo's pytorch-faster-rcnn](https://github.com/ruotianluo/pytorch-faster-rcnn) which based on [Xinlei Chen's tf-faster-rcnn](https://github.com/endernewton/tf-faster-rcnn)
 - [faster-rcnn.pytorch by Jianwei Yang and Jiasen Lu](https://github.com/jwyang/faster-rcnn.pytorch).It mainly refer to [longcw's faster_rcnn_pytorch](https://github.com/longcw/faster_rcnn_pytorch)
 - All the above Repositories have referred to [py-faster-rcnn by Ross Girshick and Sean Bell](https://github.com/rbgirshick/py-faster-rcnn)  either directly or indirectly. 
+- We fix the code according to our requirements[A Simple and Fast Implementation of Faster R-CNN by chenyuntc](https://github.com/chenyuntc/simple-faster-rcnn-pytorch) 
 
 ## ^_^
 Licensed under MIT, see the LICENSE for more detail.

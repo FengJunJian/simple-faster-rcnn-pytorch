@@ -59,7 +59,7 @@ class FasterRCNNTrainer(nn.Module):
 
         # indicators for training status
         self.rpn_cm = ConfusionMeter(2)
-        self.roi_cm = ConfusionMeter(len(cfg.VOC_BBOX_LABEL_NAMES))#
+        self.roi_cm = ConfusionMeter(len(cfg.VOC_BBOX_LABEL_NAMES)+1)#
         self.meters = {k: AverageValueMeter() for k in LossTuple._fields}  # average loss
 
     def forward(self, imgs, bboxes, labels, scale):
@@ -187,7 +187,7 @@ class FasterRCNNTrainer(nn.Module):
         save_dict = dict()
 
         save_dict['model'] = self.faster_rcnn.state_dict()
-        save_dict['config'] = cfg._state_dict()
+        save_dict['config'] = dict(cfg)#cfg._state_dict()
         save_dict['other_info'] = kwargs
         save_dict['vis_info'] = self.vis.state_dict()
 
