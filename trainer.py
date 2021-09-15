@@ -10,7 +10,7 @@ import torch as t
 from utils import array_tool as at
 from utils.vis_tool import Visualizer
 
-from utils.config import opt
+from utils.config import cfg#opt
 from torchnet.meter import ConfusionMeter, AverageValueMeter
 
 LossTuple = namedtuple('LossTuple',
@@ -43,8 +43,8 @@ class FasterRCNNTrainer(nn.Module):
         super(FasterRCNNTrainer, self).__init__()
 
         self.faster_rcnn = faster_rcnn
-        self.rpn_sigma = opt.rpn_sigma
-        self.roi_sigma = opt.roi_sigma
+        self.rpn_sigma = cfg.rpn_sigma
+        self.roi_sigma = cfg.roi_sigma
 
         # target creator create gt_bbox gt_label etc as training targets. 
         self.anchor_target_creator = AnchorTargetCreator()
@@ -55,11 +55,11 @@ class FasterRCNNTrainer(nn.Module):
 
         self.optimizer = self.faster_rcnn.get_optimizer()
         # visdom wrapper
-        self.vis = Visualizer(env=opt.env)
+        self.vis = Visualizer(env=cfg.env)
 
         # indicators for training status
         self.rpn_cm = ConfusionMeter(2)
-        self.roi_cm = ConfusionMeter(21)
+        self.roi_cm = ConfusionMeter(len(cfg.VOC_BBOX_LABEL_NAMES))#
         self.meters = {k: AverageValueMeter() for k in LossTuple._fields}  # average loss
 
     def forward(self, imgs, bboxes, labels, scale):
@@ -187,7 +187,7 @@ class FasterRCNNTrainer(nn.Module):
         save_dict = dict()
 
         save_dict['model'] = self.faster_rcnn.state_dict()
-        save_dict['config'] = opt._state_dict()
+        save_dict['config'] = cfg._state_dict()
         save_dict['other_info'] = kwargs
         save_dict['vis_info'] = self.vis.state_dict()
 
@@ -215,8 +215,8 @@ class FasterRCNNTrainer(nn.Module):
         else:  # legacy way, for backward compatibility
             self.faster_rcnn.load_state_dict(state_dict)
             return self
-        if parse_opt:
-            opt._parse(state_dict['config'])
+        # if parse_opt:
+        #     cfg._parse(state_dict['config'])
         if 'optimizer' in state_dict and load_optimizer:
             self.optimizer.load_state_dict(state_dict['optimizer'])
         return self

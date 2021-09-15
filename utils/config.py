@@ -70,7 +70,8 @@ cfg.VOC_BBOX_LABEL_NAMES=(
 
 
 cfg.voc_data_dir='E:/fjj/SeaShips_SMD'
-cfg.split='label3'
+cfg.split='label3'#'visual'#'label3'
+cfg.test_split='test1283'
 cfg.DATASETS=CN()
 
 # DATASETS = {

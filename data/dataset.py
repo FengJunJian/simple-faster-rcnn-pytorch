@@ -97,7 +97,7 @@ class Transform(object):
         return img, bbox, label, scale
 
 
-class Dataset:
+class Dataset(object):
     def __init__(self, cfg):
         self.opt = cfg
         self.db = VOCBboxDataset(cfg.voc_data_dir,cfg.split)
@@ -105,7 +105,8 @@ class Dataset:
 
     def __getitem__(self, idx):
         ori_img, bbox, label, difficult = self.db.get_example(idx)
-
+        if len(bbox)==0 or len(label) ==0:
+            return ori_img, bbox, label, difficult
         img, bbox, label, scale = self.tsf((ori_img, bbox, label))
         # TODO: check whose stride is negative to fix this instead copy all
         # some of the strides of a given numpy array are negative.
@@ -115,7 +116,7 @@ class Dataset:
         return len(self.db)
 
 
-class TestDataset:
+class TestDataset(object):
     def __init__(self, cfg, split='test', use_difficult=True):
         self.opt = cfg
         self.db = VOCBboxDataset(cfg.voc_data_dir, split=split, use_difficult=use_difficult)

@@ -119,18 +119,19 @@ class VOCBboxDataset:
                 for tag in ('ymin', 'xmin', 'ymax', 'xmax')])
             name = obj.find('name').text.strip()#obj.find('name').text.lower().strip()
             label.append(cfg.VOC_BBOX_LABEL_NAMES.index(name))
-        #try:
-        bbox = np.stack(bbox).astype(np.float32)
-        label = np.stack(label).astype(np.int32)
-        # except:
-        #     print(id_)
+
 
         # When `use_difficult==False`, all elements in `difficult` are False.
         difficult = np.array(difficult, dtype=np.bool).astype(np.uint8)  # PyTorch don't support np.bool
-
         # Load a image
         img_file = os.path.join(self.data_dir, 'JPEGImages', id_ + '.jpg')
         img = read_image(img_file, color=True)
+        if len(bbox)==0 or len(label) ==0:
+            return img, bbox, label, difficult
+
+        bbox = np.stack(bbox).astype(np.float32)
+        label = np.stack(label).astype(np.int32)
+
 
         # if self.return_difficult:
         #     return img, bbox, label, difficult

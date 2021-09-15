@@ -7,32 +7,33 @@ import visdom
 
 matplotlib.use('Agg')
 from matplotlib import pyplot as plot
-
+from utils.config import cfg
 # from data.voc_dataset import VOC_BBOX_LABEL_NAMES
 
 
-VOC_BBOX_LABEL_NAMES = (
-    'fly',
-    'bike',
-    'bird',
-    'boat',
-    'pin',
-    'bus',
-    'c',
-    'cat',
-    'chair',
-    'cow',
-    'table',
-    'dog',
-    'horse',
-    'moto',
-    'p',
-    'plant',
-    'shep',
-    'sofa',
-    'train',
-    'tv',
-)
+VOC_BBOX_LABEL_NAMES =cfg.VOC_BBOX_LABEL_NAMES
+#     = (
+#     'fly',
+#     'bike',
+#     'bird',
+#     'boat',
+#     'pin',
+#     'bus',
+#     'c',
+#     'cat',
+#     'chair',
+#     'cow',
+#     'table',
+#     'dog',
+#     'horse',
+#     'moto',
+#     'p',
+#     'plant',
+#     'shep',
+#     'sofa',
+#     'train',
+#     'tv',
+# )
 
 
 def vis_image(img, ax=None):
